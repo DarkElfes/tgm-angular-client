@@ -1,0 +1,9 @@
+<nav hlmNavigationMenu>
+    <ul hlmNavigationMenuList>
+        @for(page of pages; track $index){
+        <li hlmNavigationMenuItem>
+            <a hlmNavigationMenuLink [routerLink]="page.href">{{page.title}}</a>
+        </li>
+        }
+    </ul>
+</nav>

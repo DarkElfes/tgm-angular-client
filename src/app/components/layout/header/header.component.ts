@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { NavMenuComponent } from "./nav-menu/nav-menu.component";
+
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  imports: [HlmButtonImports, NavMenuComponent],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
 

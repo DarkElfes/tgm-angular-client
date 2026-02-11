@@ -1,3 +1,5 @@
+@use "tailwindcss";
+
 @layer theme, base, components, utilities;
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/preflight.css' layer(base);
@@ -5,7 +7,6 @@
 
 
 
-@use 'tailwindcss';
 @import "@spartan-ng/brain/hlm-tailwind-preset.css";
 
 :root {
