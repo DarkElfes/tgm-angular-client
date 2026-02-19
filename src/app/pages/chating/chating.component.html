@@ -1,1 +1,33 @@
-<p>chating works!</p>
+<hlm-tabs tab="">
+    <hlm-tabs-list>
+        @for(a of this.chatingService.accounts(); track a.id){
+        <button [hlmTabsTrigger]="a.id">
+            <hlm-avatar size="sm">
+                <!-- <img hlmAvatarImage [src]="a." -->
+                <span hlmAvatarFallback>{{a.firstName[0]}}</span>
+            </hlm-avatar>
+            {{a.firstName}}
+        </button>
+        }
+    </hlm-tabs-list>
+    @for(a of this.chatingService.accounts(); track a.id){
+    <div [hlmTabsContent]="a.id" class="flex flex-col gap-2">
+
+        <div hlmCard>
+            <div hlmCardHeader>
+                <h3 hlmCardTitle>
+                    {{`${a.firstName}${a.lastName ? ` ${a.lastName}` : "" }`}}
+                    <app-status-cell [status]="a.serviceState" />
+                </h3>
+                <p hlmCardDescription>{{a.phoneNumber}}</p>
+            </div>
+        </div>
+
+        <div class="flex flex-1">
+            <app-chat-panel [chats]="a.chats" [chatFolders]="a.chatFolders"/>
+            
+        </div>
+
+    </div>
+    }
+</hlm-tabs>

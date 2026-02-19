@@ -1,11 +1,11 @@
-import { TdClientState } from "./enums";
+import { TgServiceState } from "./generated/tgm.Domain.TgAccounts.Enums";
 
 export type Account = {
     id: string;
     phoneNumber: string;
     firstName: string;
     lastName?: string;
-    clientState: TdClientState;
+    serviceState: TgServiceState;
     chatFolders: ChatFolderInfo[]
     chats: Chat[];
 }
@@ -16,11 +16,11 @@ export type ChatFolderInfo = {
 }
 
 export type Chat = {
-    id: string;
+    id: number;
     title: string;
     messages: Message[];
     photoData: Uint8Array;
-    positions: ChatPosition[]
+    positions: ChatPosition[];
 }
 
 export type Message = {
@@ -31,6 +31,7 @@ export type Message = {
 }
 
 export type ChatPosition = {
-    list: string,
+    chatFolderId? : string,
+    type: string,
     order: number,
 }

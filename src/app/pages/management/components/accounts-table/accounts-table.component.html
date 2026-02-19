@@ -1,0 +1,79 @@
+@if(this.managementService.isLoading()) {
+<hlm-empty>
+    <hlm-empty-header>
+        <hlm-empty-media variant="icon">
+            <hlm-spinner />
+        </hlm-empty-media>
+        <div hlmEmptyTitle>Loading accounts data</div>
+        <div hlmEmptyDescription>Please wait while we process your request. Do not refresh the page.</div>
+    </hlm-empty-header>
+</hlm-empty>
+}
+@else {
+<div class="flex gap-2 flex-col">
+
+    <div class="self-end flex gap-2">
+        <button hlmBtn>
+            Add Account
+        </button>
+
+        <button hlmBtn variant="outline" align="end" [hlmDropdownMenuTrigger]="menu">
+            Columns
+            <ng-icon hlm name="lucideChevronDown" class="ml-2" size="sm" />
+        </button>
+        <ng-template #menu>
+            <hlm-dropdown-menu class="w-40">
+                @for (column of _hidableColumns; track column.id) {
+                <button hlmDropdownMenuCheckbox class="capitalize" [checked]="column.getIsVisible()"
+                    (triggered)="column.toggleVisibility()">
+                    <hlm-dropdown-menu-checkbox-indicator />
+                    {{ column.columnDef.id }}
+                </button>
+                }
+            </hlm-dropdown-menu>
+        </ng-template>
+    </div>
+
+    <div class="overflow-hidden rounded-md border">
+        @defer {
+        <div hlmTableContainer>
+            <table hlmTable>
+                <thead hlmTHead>
+                    @for (hg of _table.getHeaderGroups(); track hg.id) {
+                    <tr hlmTr>
+                        @for (header of hg.headers; track header.id) {
+                        <th hlmTh class="font-bold">
+                            <ng-container *flexRender="
+                        header.column.columnDef.header;
+                        props: header.getContext()
+                        let cell">
+                                {{ cell }}
+                            </ng-container>
+                        </th>
+                        }
+                    </tr>
+                    }
+                </thead>
+                <tbody hlmTBody>
+                    @for (row of _table.getRowModel().rows; track row.id) {
+                    <tr hlmTr>
+                        @for (cell of row.getVisibleCells(); track cell.id) {
+                        <td hlmTd>
+                            <ng-container *flexRender="
+                                    cell.column.columnDef.cell;
+                                    props: cell.getContext();
+                                    let cell">
+                                {{ cell }}
+                            </ng-container>
+                        </td>
+                        }
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        }
+    </div>
+
+</div>
+}

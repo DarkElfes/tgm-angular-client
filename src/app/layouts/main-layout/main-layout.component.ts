@@ -8,7 +8,7 @@ import { RouterOutlet } from '@angular/router';
   imports: [HeaderComponent, RouterOutlet],
   template: `
     <app-header />
-    <main>
+    <main class="mx-4 flex flex-col gap-2">
       <router-outlet/>
     </main>
   `,
