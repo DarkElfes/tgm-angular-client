@@ -1,0 +1,16 @@
+<hlm-dropdown-menu>
+    <hlm-dropdown-menu-group>
+        <button hlmDropdownMenuItem (triggered)="responseWithAI()">
+            <ng-icon hlmIcon name="lucideBotMessageSquare" />
+            Response with AI
+        </button>
+        <button
+            hlmDropdownMenuItem
+            class="text-red-400"
+            (triggered)="deleteMessage()"
+        >
+            <ng-icon class="text-inherit" hlmIcon name="lucideTrash" />
+            Delete
+        </button>
+    </hlm-dropdown-menu-group>
+</hlm-dropdown-menu>

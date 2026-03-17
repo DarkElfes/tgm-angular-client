@@ -1,0 +1,19 @@
+<div
+    hlmItem
+    class="select-none flex-nowrap items-center w-full hover:bg-muted p-2"
+    [class.bg-accent/50]="isSelected()"
+    (click)="onClickHandle()"
+>
+    <div hlmItemMedia>
+        <hlm-avatar class="size-10">
+            <img hlmAvatarImage [src]="photoData()" />
+            <span hlmAvatarFallback>{{ chat().title.at(0) }}</span>
+        </hlm-avatar>
+    </div>
+    <div hlmItemContent class="min-w-0">
+        <div hlmItemTitle class="font-medium truncate block w-full">{{ chat().title }}</div>
+        <p hlmItemDescription class="truncate line-clamp-1">
+            {{ chat().lastMessage?.content }}
+        </p>
+    </div>
+</div>

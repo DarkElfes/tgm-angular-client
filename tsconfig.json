@@ -63,6 +63,27 @@
       ],
       "@spartan-ng/helm/avatar": [
         "./libs/ui/avatar/src/index.ts"
+      ],
+      "@spartan-ng/helm/kbd": [
+        "./libs/ui/kbd/src/index.ts"
+      ],
+      "@spartan-ng/helm/progress": [
+        "./libs/ui/progress/src/index.ts"
+      ],
+      "@spartan-ng/helm/select": [
+        "./libs/ui/select/src/index.ts"
+      ],
+      "@spartan-ng/helm/context-menu": [
+        "./libs/ui/context-menu/src/index.ts"
+      ],
+      "@spartan-ng/helm/alert": [
+        "./libs/ui/alert/src/index.ts"
+      ],
+      "@spartan-ng/helm/input": [
+        "./libs/ui/input/src/index.ts"
+      ],
+      "@spartan-ng/helm/carousel": [
+        "./libs/ui/carousel/src/index.ts"
       ]
     }
   },

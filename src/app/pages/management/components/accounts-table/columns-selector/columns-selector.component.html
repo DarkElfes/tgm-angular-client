@@ -1,0 +1,16 @@
+<hlm-select
+    [multiple]="true"
+    (valueChange)="onValueChanged($event)"
+    [value]="selectedColumnNames()"
+>
+    <hlm-select-trigger class="w-36">
+        <p>Columns</p>
+    </hlm-select-trigger>
+    <hlm-select-content>
+        @for (column of columns(); track column.id) {
+            <hlm-option [value]="column.id">
+                {{ column.columnDef.header }}</hlm-option
+            >
+        }
+    </hlm-select-content>
+</hlm-select>

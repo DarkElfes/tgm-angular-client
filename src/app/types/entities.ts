@@ -18,20 +18,23 @@ export type ChatFolderInfo = {
 export type Chat = {
     id: number;
     title: string;
+    lastMessage?: Message;
     messages: Message[];
-    photoData: Uint8Array;
+    photoData?: Uint8Array;
     positions: ChatPosition[];
+    hasMoreMessagesForLoading: boolean;
 }
 
 export type Message = {
-    id: string;
+    id: number;
     content: string;
     date: number;
     isOutgoing: boolean;
+    isPending: boolean;
 }
 
 export type ChatPosition = {
-    chatFolderId? : string,
+    chatFolderId? : number,
     type: string,
     order: number,
 }

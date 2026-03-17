@@ -1,0 +1,17 @@
+@let curChat = this.curChat();
+
+
+@if(curChat){
+    <app-chat-user-info/>
+}
+
+<div
+    class="flex justify-center items-center mx-auto py-4 min-h-0 h-full lg:w-full lg:px-4 xl:w-4xl 2xl:-translate-x-[150px]"
+>
+    @if (curChat) {
+
+        <app-messages-panel />
+    } @else {
+        <app-chat-not-selected-empty />
+    }
+</div>

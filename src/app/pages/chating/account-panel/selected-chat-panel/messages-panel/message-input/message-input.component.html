@@ -1,0 +1,11 @@
+<input
+    hlmInput
+    type="text"
+    [formControl]="input"
+    placeholder="Message"
+    (keypress)="checkKeyButton($event)"
+/>
+
+<button hlmBtn size="icon" variant="secondary" (click)="sendMessage()">
+    <ng-icon hlmIcon name="lucideSendHorizontal" />
+</button>

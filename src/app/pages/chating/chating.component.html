@@ -1,33 +1,28 @@
-<hlm-tabs tab="">
-    <hlm-tabs-list>
-        @for(a of this.chatingService.accounts(); track a.id){
-        <button [hlmTabsTrigger]="a.id">
-            <hlm-avatar size="sm">
-                <!-- <img hlmAvatarImage [src]="a." -->
-                <span hlmAvatarFallback>{{a.firstName[0]}}</span>
-            </hlm-avatar>
-            {{a.firstName}}
-        </button>
-        }
-    </hlm-tabs-list>
-    @for(a of this.chatingService.accounts(); track a.id){
-    <div [hlmTabsContent]="a.id" class="flex flex-col gap-2">
+@let accounts = this.accounts();
 
-        <div hlmCard>
-            <div hlmCardHeader>
-                <h3 hlmCardTitle>
-                    {{`${a.firstName}${a.lastName ? ` ${a.lastName}` : "" }`}}
-                    <app-status-cell [status]="a.serviceState" />
-                </h3>
-                <p hlmCardDescription>{{a.phoneNumber}}</p>
-            </div>
+<hlm-tabs tab="not-selected" class="w-full flex-1 min-h-0">
+    <ng-template #tabList>
+        <hlm-paginated-tabs-list variant="line">
+            @for (a of accounts; track a.id) {
+                <button [hlmTabsTrigger]="a.id">
+                    <hlm-avatar size="sm">
+                        <span hlmAvatarFallback>{{ a.firstName[0] }}</span>
+                    </hlm-avatar>
+                    {{ a.firstName }}
+                </button>
+            } @empty{
+                <hlm-spinner class="text-md"/>
+            }
+        </hlm-paginated-tabs-list>
+    </ng-template>
+
+    @for (a of accounts; track a.id) {
+        <div [hlmTabsContent]="a.id" class="flex flex-1 min-h-0">
+            <app-account-panel [account]="a" />
         </div>
-
-        <div class="flex flex-1">
-            <app-chat-panel [chats]="a.chats" [chatFolders]="a.chatFolders"/>
-            
-        </div>
-
-    </div>
     }
+
+    <div hlmTabsContent="not-selected" class="flex flex-1">
+        <app-account-not-selected-empty />
+    </div>
 </hlm-tabs>

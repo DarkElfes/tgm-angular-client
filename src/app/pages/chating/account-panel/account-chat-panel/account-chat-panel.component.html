@@ -1,0 +1,32 @@
+@if (chatLists().length > 1) {
+<hlm-tabs [tab]="CHAT_LIST_MAIN" class="flex-1 flex min-h-0">
+    <hlm-tabs-list class="w-full sticky">
+        @for (list of chatLists(); track list.id) {
+        <button [hlmTabsTrigger]="list.name">
+            {{ list.name === CHAT_LIST_MAIN ? "All" : list.name }}
+        </button>
+        }
+    </hlm-tabs-list>
+
+    @for (list of chatLists(); track list.id) {
+    <div [hlmTabsContent]="list.name" class="flex-1 gap-2 overflow-y-auto">
+        @for (
+        chat of filteredChatsForList({
+        id: list.id,
+        name: list.name,
+        });
+        track chat.id
+        ) {
+        <app-chat-card [chat]="chat" [isSelected]="chat.id === curChat()?.id" (onSelect)="chatSelected($event)" />
+        }
+    </div>
+    }
+</hlm-tabs>
+} @else {
+@for (
+chat of filteredChatsForList({ id: 0, name: CHAT_LIST_MAIN });
+track chat.id
+) {
+<app-chat-card [chat]="chat" [isSelected]="chat.id === curChat()?.id" (onSelect)="chatSelected($event)" />
+}
+}

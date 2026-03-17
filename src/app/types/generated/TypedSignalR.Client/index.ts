@@ -5,7 +5,7 @@
 import type { HubConnection, IStreamResult, Subject } from '@microsoft/signalr';
 import type { ITgChatingHub, ITgChatingClient } from './tgm.Api.TgAccounts.Hubs.Chating';
 import type { ITgManagementHub, ITgManagementClient } from './tgm.Api.TgAccounts.Hubs.Management';
-import type { AccountDTO, ChatFolderInfoDTO, ChatDTO, ChatPositionDTO, MessageDTO } from '../tgm.Application.TgAccounts.DTOs';
+import type { MessageDTO, AccountDTO, ChatFolderInfoDTO, ChatDTO, ChatPositionDTO } from '../tgm.Application.TgAccounts.Features.Chating.DTOs';
 import type { TgServiceState } from '../tgm.Domain.TgAccounts.Enums';
 
 
@@ -90,12 +90,24 @@ class ITgChatingHub_HubProxy implements ITgChatingHub {
     public constructor(private connection: HubConnection) {
     }
 
-    public readonly connectToChatingFlowAsync = async (): Promise<AccountDTO[]> => {
+    public readonly connectToChatingFlowAsync = async (): Promise<void> => {
         return await this.connection.invoke("ConnectToChatingFlowAsync");
     }
 
-    public readonly loadMessagesAsync = async (accountId: string, chatId: number, isFirstLoad: boolean): Promise<void> => {
-        return await this.connection.invoke("LoadMessagesAsync", accountId, chatId, isFirstLoad);
+    public readonly getMessagesAsync = async (accountId: string, chatId: number, fromMessageId: number, limit: number): Promise<void> => {
+        return await this.connection.invoke("GetMessagesAsync", accountId, chatId, fromMessageId, limit);
+    }
+
+    public readonly sendMessageAsync = async (accountId: string, chatId: number, messageContent: string): Promise<void> => {
+        return await this.connection.invoke("SendMessageAsync", accountId, chatId, messageContent);
+    }
+
+    public readonly deleteMessagesAsync = async (accountId: string, chatId: number, messagesIds: number[], revoke: boolean): Promise<void> => {
+        return await this.connection.invoke("DeleteMessagesAsync", accountId, chatId, messagesIds, revoke);
+    }
+
+    public readonly responseWithAIAsync = async (accountId: string, chatId: number, message: MessageDTO): Promise<void> => {
+        return await this.connection.invoke("ResponseWithAIAsync", accountId, chatId, message);
     }
 }
 
@@ -118,6 +130,14 @@ class ITgManagementHub_HubProxy implements ITgManagementHub {
     public readonly connectToManagementFlowAsync = async (): Promise<void> => {
         return await this.connection.invoke("ConnectToManagementFlowAsync");
     }
+
+    public readonly connectToAddingFlowAsync = async (): Promise<void> => {
+        return await this.connection.invoke("ConnectToAddingFlowAsync");
+    }
+
+    public readonly disconnectFromAddingFlowAsync = async (): Promise<void> => {
+        return await this.connection.invoke("DisconnectFromAddingFlowAsync");
+    }
 }
 
 
@@ -132,33 +152,45 @@ class ITgChatingClient_Binder implements ReceiverRegister<ITgChatingClient> {
 
     public readonly register = (connection: HubConnection, receiver: ITgChatingClient): Disposable => {
 
-        const __receiveErrorMessageAsync = (...args: [string]) => receiver.receiveErrorMessageAsync(...args);
+        const __receiveErrorMessageAsync = (...args: [string, string]) => receiver.receiveErrorMessageAsync(...args);
         const __receiveTgServiceStateAsync = (...args: [string, TgServiceState]) => receiver.receiveTgServiceStateAsync(...args);
-        const __receiveAccountsAsync = (...args: [AccountDTO[]]) => receiver.receiveAccountsAsync(...args);
+        const __receiveAccountAsync = (...args: [AccountDTO]) => receiver.receiveAccountAsync(...args);
         const __receiveChatFoldersAsync = (...args: [string, ChatFolderInfoDTO[]]) => receiver.receiveChatFoldersAsync(...args);
         const __receiveChatAsync = (...args: [string, ChatDTO]) => receiver.receiveChatAsync(...args);
         const __receiveChatPositionAsync = (...args: [string, number, ChatPositionDTO]) => receiver.receiveChatPositionAsync(...args);
         const __receiveChatPhotoAsync = (...args: [string, number, string]) => receiver.receiveChatPhotoAsync(...args);
-        const __receiveMessagesAsync = (...args: [string, number, MessageDTO[]]) => receiver.receiveMessagesAsync(...args);
+        const __receiveChatLastMessageAsync = (...args: [string, number, MessageDTO]) => receiver.receiveChatLastMessageAsync(...args);
+        const __receiveNewMessagesAsync = (...args: [string, number, MessageDTO]) => receiver.receiveNewMessagesAsync(...args);
+        const __receiveMessageSendSucceeded = (...args: [string, number, number, number]) => receiver.receiveMessageSendSucceeded(...args);
+        const __receiveDeletedMessagesAsync = (...args: [string, number, number[]]) => receiver.receiveDeletedMessagesAsync(...args);
+        const __connectionReceiveLoadedMessagesAsync = (...args: [string, number, MessageDTO[]]) => receiver.connectionReceiveLoadedMessagesAsync(...args);
 
         connection.on("ReceiveErrorMessageAsync", __receiveErrorMessageAsync);
         connection.on("ReceiveTgServiceStateAsync", __receiveTgServiceStateAsync);
-        connection.on("ReceiveAccountsAsync", __receiveAccountsAsync);
+        connection.on("ReceiveAccountAsync", __receiveAccountAsync);
         connection.on("ReceiveChatFoldersAsync", __receiveChatFoldersAsync);
         connection.on("ReceiveChatAsync", __receiveChatAsync);
         connection.on("ReceiveChatPositionAsync", __receiveChatPositionAsync);
         connection.on("ReceiveChatPhotoAsync", __receiveChatPhotoAsync);
-        connection.on("ReceiveMessagesAsync", __receiveMessagesAsync);
+        connection.on("ReceiveChatLastMessageAsync", __receiveChatLastMessageAsync);
+        connection.on("ReceiveNewMessagesAsync", __receiveNewMessagesAsync);
+        connection.on("ReceiveMessageSendSucceeded", __receiveMessageSendSucceeded);
+        connection.on("ReceiveDeletedMessagesAsync", __receiveDeletedMessagesAsync);
+        connection.on("ConnectionReceiveLoadedMessagesAsync", __connectionReceiveLoadedMessagesAsync);
 
         const methodList: ReceiverMethod[] = [
             { methodName: "ReceiveErrorMessageAsync", method: __receiveErrorMessageAsync },
             { methodName: "ReceiveTgServiceStateAsync", method: __receiveTgServiceStateAsync },
-            { methodName: "ReceiveAccountsAsync", method: __receiveAccountsAsync },
+            { methodName: "ReceiveAccountAsync", method: __receiveAccountAsync },
             { methodName: "ReceiveChatFoldersAsync", method: __receiveChatFoldersAsync },
             { methodName: "ReceiveChatAsync", method: __receiveChatAsync },
             { methodName: "ReceiveChatPositionAsync", method: __receiveChatPositionAsync },
             { methodName: "ReceiveChatPhotoAsync", method: __receiveChatPhotoAsync },
-            { methodName: "ReceiveMessagesAsync", method: __receiveMessagesAsync }
+            { methodName: "ReceiveChatLastMessageAsync", method: __receiveChatLastMessageAsync },
+            { methodName: "ReceiveNewMessagesAsync", method: __receiveNewMessagesAsync },
+            { methodName: "ReceiveMessageSendSucceeded", method: __receiveMessageSendSucceeded },
+            { methodName: "ReceiveDeletedMessagesAsync", method: __receiveDeletedMessagesAsync },
+            { methodName: "ConnectionReceiveLoadedMessagesAsync", method: __connectionReceiveLoadedMessagesAsync }
         ]
 
         return new ReceiverMethodSubscription(connection, methodList);
@@ -174,15 +206,21 @@ class ITgManagementClient_Binder implements ReceiverRegister<ITgManagementClient
 
     public readonly register = (connection: HubConnection, receiver: ITgManagementClient): Disposable => {
 
-        const __receiveErrorMessageAsync = (...args: [string]) => receiver.receiveErrorMessageAsync(...args);
+        const __receiveErrorMessageAsync = (...args: [string, string]) => receiver.receiveErrorMessageAsync(...args);
         const __receiveTgServiceStateAsync = (...args: [string, TgServiceState]) => receiver.receiveTgServiceStateAsync(...args);
+        const __receiveQrStringAsync = (...args: [string]) => receiver.receiveQrStringAsync(...args);
+        const __receiveConfirmSuccessfulSignInAsync = (...args: [boolean]) => receiver.receiveConfirmSuccessfulSignInAsync(...args);
 
         connection.on("ReceiveErrorMessageAsync", __receiveErrorMessageAsync);
         connection.on("ReceiveTgServiceStateAsync", __receiveTgServiceStateAsync);
+        connection.on("ReceiveQrStringAsync", __receiveQrStringAsync);
+        connection.on("ReceiveConfirmSuccessfulSignInAsync", __receiveConfirmSuccessfulSignInAsync);
 
         const methodList: ReceiverMethod[] = [
             { methodName: "ReceiveErrorMessageAsync", method: __receiveErrorMessageAsync },
-            { methodName: "ReceiveTgServiceStateAsync", method: __receiveTgServiceStateAsync }
+            { methodName: "ReceiveTgServiceStateAsync", method: __receiveTgServiceStateAsync },
+            { methodName: "ReceiveQrStringAsync", method: __receiveQrStringAsync },
+            { methodName: "ReceiveConfirmSuccessfulSignInAsync", method: __receiveConfirmSuccessfulSignInAsync }
         ]
 
         return new ReceiverMethodSubscription(connection, methodList);

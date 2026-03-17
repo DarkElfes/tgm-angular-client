@@ -1,0 +1,14 @@
+@let curChat = this.curChat()!;
+
+<div class="flex gap-2 items-center">
+    <hlm-avatar size="lg">
+        <img hlmAvatarImage [src]="photoSrc()" />
+        <span hlmAvatarFallback>{{ curChat.title.at(0) }}</span>
+    </hlm-avatar>
+    <div>
+        <h4 class="text-base/6 font-medium text-foreground">
+            {{ curChat.title }}
+        </h4>
+        <p class="text-sm/4 text-muted-foreground">bot</p>
+    </div>
+</div>

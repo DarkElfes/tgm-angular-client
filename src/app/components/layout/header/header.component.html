@@ -1,6 +1,48 @@
-<header class="p-4 mb-12 border-b">
-    <div class="container mx-auto flex relative item-center">
-        <h1 class="text-3xl absolute">TgManager</h1>
-        <app-nav-menu class="mx-auto" />
-    </div>
+<header
+  class="p-2 border-b flex relative justify-center items-center gap-4 h-[56px]"
+>
+  <h1 class="text-xl absolute left-4">TgManager</h1>
+
+  @if (headerService.additionalNav(); as templateRef) {
+    <button
+      hlmBtn
+      (click)="prev()"
+      class="rounded-full"
+      [disabled]="!carousel.canScrollPrev()"
+      variant="outline"
+      appHotkey
+      hotkey="Alt + ArrowUp"
+      (hotkeyPressed)="carousel.scrollPrev()"
+    >
+      <ng-icon hlmIcon name="lucideArrowUp" />
+      <kbd hlmKbd>Alt + ↑</kbd>
+    </button>
+
+    <hlm-carousel orientation="vertical" #carousel class="w-[400px]">
+      <hlm-carousel-content class="items-center h-[44px] -mt-1">
+        <hlm-carousel-item class="basis flex items-center justify-center pt-1">
+          <app-nav-menu />
+        </hlm-carousel-item>
+        <hlm-carousel-item class="basis-1 pt-1 h-[44px]">
+          <ng-container *ngTemplateOutlet="templateRef"></ng-container>
+        </hlm-carousel-item>
+      </hlm-carousel-content>
+    </hlm-carousel>
+
+    <button
+      hlmBtn
+      (click)="next()"
+      class="rounded-full"
+      [disabled]="!carousel.canScrollNext()"
+      variant="outline"
+      appHotkey
+      hotkey="Alt + ArrowDown"
+      (hotkeyPressed)="carousel.scrollNext()"
+    >
+      <ng-icon hlmIcon name="lucideArrowDown" />
+      <kbd hlmKbd>Alt + ↓</kbd>
+    </button>
+  } @else {
+    <app-nav-menu class="w-[300px]" />
+  }
 </header>

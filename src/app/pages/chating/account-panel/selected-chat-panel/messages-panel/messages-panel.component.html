@@ -1,0 +1,40 @@
+@let curChat = this.curChat()!;
+
+<div
+    #messagesList
+    class="flex flex-1 flex-col-reverse overflow-y-auto gap-2 relative"
+>
+    @for (m of curChat.messages; track m.id) {
+        <div
+            class="flex gap-2 relative w-fit max-w-[60%] py-1 pl-2 pr-0.75 bg-card border rounded-sm text-muted-foreground break-all items-end"
+            [class.ml-auto]="m.isOutgoing"
+            [hlmContextMenuTrigger]="ctxMenu"
+            [hlmContextMenuTriggerData]="{ $implicit: m }"
+        >
+            <p>{{ m.content }}</p>
+            <span
+                class="text-xs text-muted-foreground/40 top-[.3rem] text-nowrap relative bottom-auto"
+            >
+                {{ m.date | date: "HH:mm" }}
+            </span>
+        </div>
+    }
+
+    <ng-template #ctxMenu let-message>
+        <app-message-context-menu [message]="message" />
+    </ng-template>
+
+    @if (curChat.hasMoreMessagesForLoading) {
+        <div #loader class="flex justify-center">
+            <hlm-spinner/>
+        </div>
+    } @else {
+        <app-loader-alert
+            [style.visibility]="
+                curChat.hasMoreMessagesForLoading ? 'hidden' : 'visible'
+            "
+        />
+    }
+</div>
+
+<app-message-input />

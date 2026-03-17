@@ -10,19 +10,38 @@ export type ITgManagementHub = {
     * @returns Transpiled from System.Threading.Tasks.Task
     */
     connectToManagementFlowAsync(): Promise<void>;
+    /**
+    * @returns Transpiled from System.Threading.Tasks.Task
+    */
+    connectToAddingFlowAsync(): Promise<void>;
+    /**
+    * @returns Transpiled from System.Threading.Tasks.Task
+    */
+    disconnectFromAddingFlowAsync(): Promise<void>;
 }
 
 export type ITgManagementClient = {
     /**
+    * @param serviceId Transpiled from string
     * @param errorMessage Transpiled from string
     * @returns Transpiled from System.Threading.Tasks.Task
     */
-    receiveErrorMessageAsync(errorMessage: string): Promise<void>;
+    receiveErrorMessageAsync(serviceId: string, errorMessage: string): Promise<void>;
     /**
-    * @param accountId Transpiled from System.Guid
+    * @param serviceId Transpiled from string
     * @param serviceState Transpiled from tgm.Domain.TgAccounts.Enums.TgServiceState
     * @returns Transpiled from System.Threading.Tasks.Task
     */
-    receiveTgServiceStateAsync(accountId: string, serviceState: TgServiceState): Promise<void>;
+    receiveTgServiceStateAsync(serviceId: string, serviceState: TgServiceState): Promise<void>;
+    /**
+    * @param qrString Transpiled from string
+    * @returns Transpiled from System.Threading.Tasks.Task
+    */
+    receiveQrStringAsync(qrString: string): Promise<void>;
+    /**
+    * @param isSuccess Transpiled from bool
+    * @returns Transpiled from System.Threading.Tasks.Task
+    */
+    receiveConfirmSuccessfulSignInAsync(isSuccess: boolean): Promise<void>;
 }
 

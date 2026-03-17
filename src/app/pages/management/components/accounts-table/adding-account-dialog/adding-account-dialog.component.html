@@ -1,0 +1,53 @@
+<hlm-dialog (stateChanged)="onStateChanged($event)" #dialog>
+    <button
+        hlmDialogTrigger
+        hlmBtn
+        appHotkey
+        hotkey="Alt+N"
+        (hotkeyPressed)="dialog.open()"
+        variant="outline"
+    >
+        <ng-icon hlmIcon name="lucidePlus" size="sm" />
+        Add Account
+        <kbd hlmKbd>Alt + N</kbd>
+    </button>
+    <hlm-dialog-content *hlmDialogPortal="let ctx">
+        <hlm-dialog-header>
+            <h3 hlmDialogTitle>Add Account with QR Code</h3>
+            <p hlmDialogDescription>
+                Scan this QR code with your Telegram app to add an account.
+            </p>
+        </hlm-dialog-header>
+
+        <div
+            class="flex flex-col justify-center gap-1 items-center w-full aspect-4/2"
+        >
+            @if (managementService.qrData() === null) {
+                <hlm-spinner class="text-xl" />
+            } @else {
+                <qrcode
+                    [qrdata]="managementService.qrData()?.qrString!"
+                    [width]="200"
+                    [margin]="1"
+                    [cssClass]="'flex justify-center'"
+                ></qrcode>
+
+                <div class="relative w-full">
+                    <hlm-progress
+                        [value]="managementService.qrData()?.qrExpire ?? 0"
+                        [max]="29"
+                        class="h-2"
+                    >
+                        <hlm-progress-indicator />
+                    </hlm-progress>
+
+                    <p
+                        class="text-sm text-muted-foreground absolute right-0 top-[-12px]"
+                    >
+                        {{ managementService.qrData()?.qrExpire ?? 0 }}s
+                    </p>
+                </div>
+            }
+        </div>
+    </hlm-dialog-content>
+</hlm-dialog>

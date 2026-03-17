@@ -3,72 +3,125 @@
 /* tslint:disable */
 // @ts-nocheck
 import type { IStreamResult, Subject } from '@microsoft/signalr';
-import type { AccountDTO, ChatFolderInfoDTO, ChatDTO, ChatPositionDTO, MessageDTO } from '../tgm.Application.TgAccounts.DTOs';
+import type { MessageDTO, AccountDTO, ChatFolderInfoDTO, ChatDTO, ChatPositionDTO } from '../tgm.Application.TgAccounts.Features.Chating.DTOs';
 import type { TgServiceState } from '../tgm.Domain.TgAccounts.Enums';
 
 export type ITgChatingHub = {
     /**
-    * @returns Transpiled from System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<tgm.Application.TgAccounts.DTOs.AccountDTO>>
+    * @returns Transpiled from System.Threading.Tasks.Task
     */
-    connectToChatingFlowAsync(): Promise<AccountDTO[]>;
+    connectToChatingFlowAsync(): Promise<void>;
     /**
     * @param accountId Transpiled from System.Guid
     * @param chatId Transpiled from long
-    * @param isFirstLoad Transpiled from bool
+    * @param fromMessageId Transpiled from long
+    * @param limit Transpiled from int
     * @returns Transpiled from System.Threading.Tasks.Task
     */
-    loadMessagesAsync(accountId: string, chatId: number, isFirstLoad: boolean): Promise<void>;
+    getMessagesAsync(accountId: string, chatId: number, fromMessageId: number, limit: number): Promise<void>;
+    /**
+    * @param accountId Transpiled from System.Guid
+    * @param chatId Transpiled from long
+    * @param messageContent Transpiled from string
+    * @returns Transpiled from System.Threading.Tasks.Task
+    */
+    sendMessageAsync(accountId: string, chatId: number, messageContent: string): Promise<void>;
+    /**
+    * @param accountId Transpiled from System.Guid
+    * @param chatId Transpiled from long
+    * @param messagesIds Transpiled from long[]
+    * @param revoke Transpiled from bool
+    * @returns Transpiled from System.Threading.Tasks.Task
+    */
+    deleteMessagesAsync(accountId: string, chatId: number, messagesIds: number[], revoke: boolean): Promise<void>;
+    /**
+    * @param accountId Transpiled from System.Guid
+    * @param chatId Transpiled from long
+    * @param message Transpiled from tgm.Application.TgAccounts.Features.Chating.DTOs.MessageDTO
+    * @returns Transpiled from System.Threading.Tasks.Task
+    */
+    responseWithAIAsync(accountId: string, chatId: number, message: MessageDTO): Promise<void>;
 }
 
 export type ITgChatingClient = {
     /**
+    * @param serviceId Transpiled from string
     * @param errorMessage Transpiled from string
     * @returns Transpiled from System.Threading.Tasks.Task
     */
-    receiveErrorMessageAsync(errorMessage: string): Promise<void>;
+    receiveErrorMessageAsync(serviceId: string, errorMessage: string): Promise<void>;
     /**
-    * @param accountId Transpiled from System.Guid
+    * @param serviceId Transpiled from string
     * @param serviceState Transpiled from tgm.Domain.TgAccounts.Enums.TgServiceState
     * @returns Transpiled from System.Threading.Tasks.Task
     */
-    receiveTgServiceStateAsync(accountId: string, serviceState: TgServiceState): Promise<void>;
+    receiveTgServiceStateAsync(serviceId: string, serviceState: TgServiceState): Promise<void>;
     /**
-    * @param accounts Transpiled from System.Collections.Generic.List<tgm.Application.TgAccounts.DTOs.AccountDTO>
+    * @param account Transpiled from tgm.Application.TgAccounts.Features.Chating.DTOs.AccountDTO
     * @returns Transpiled from System.Threading.Tasks.Task
     */
-    receiveAccountsAsync(accounts: AccountDTO[]): Promise<void>;
+    receiveAccountAsync(account: AccountDTO): Promise<void>;
     /**
     * @param accountId Transpiled from System.Guid
-    * @param chatFolderInfoDTO Transpiled from tgm.Application.TgAccounts.DTOs.ChatFolderInfoDTO[]
+    * @param chatFolderInfoDTO Transpiled from tgm.Application.TgAccounts.Features.Chating.DTOs.ChatFolderInfoDTO[]
     * @returns Transpiled from System.Threading.Tasks.Task
     */
     receiveChatFoldersAsync(accountId: string, chatFolderInfoDTO: ChatFolderInfoDTO[]): Promise<void>;
     /**
     * @param accountId Transpiled from System.Guid
-    * @param chat Transpiled from tgm.Application.TgAccounts.DTOs.ChatDTO
+    * @param chat Transpiled from tgm.Application.TgAccounts.Features.Chating.DTOs.ChatDTO
     * @returns Transpiled from System.Threading.Tasks.Task
     */
     receiveChatAsync(accountId: string, chat: ChatDTO): Promise<void>;
     /**
     * @param accountId Transpiled from System.Guid
     * @param chatId Transpiled from long
-    * @param position Transpiled from tgm.Application.TgAccounts.DTOs.ChatPositionDTO
+    * @param position Transpiled from tgm.Application.TgAccounts.Features.Chating.DTOs.ChatPositionDTO
     * @returns Transpiled from System.Threading.Tasks.Task
     */
     receiveChatPositionAsync(accountId: string, chatId: number, position: ChatPositionDTO): Promise<void>;
     /**
-    * @param accoundId Transpiled from System.Guid
+    * @param accountId Transpiled from System.Guid
     * @param chatId Transpiled from long
     * @param photoData Transpiled from byte[]
     * @returns Transpiled from System.Threading.Tasks.Task
     */
-    receiveChatPhotoAsync(accoundId: string, chatId: number, photoData: string): Promise<void>;
+    receiveChatPhotoAsync(accountId: string, chatId: number, photoData: string): Promise<void>;
     /**
     * @param accountId Transpiled from System.Guid
     * @param chatId Transpiled from long
-    * @param messages Transpiled from System.Collections.Generic.List<tgm.Application.TgAccounts.DTOs.MessageDTO>
+    * @param lastMessage Transpiled from tgm.Application.TgAccounts.Features.Chating.DTOs.MessageDTO?
     * @returns Transpiled from System.Threading.Tasks.Task
     */
-    receiveMessagesAsync(accountId: string, chatId: number, messages: MessageDTO[]): Promise<void>;
+    receiveChatLastMessageAsync(accountId: string, chatId: number, lastMessage: MessageDTO): Promise<void>;
+    /**
+    * @param accountId Transpiled from System.Guid
+    * @param chatId Transpiled from long
+    * @param messages Transpiled from tgm.Application.TgAccounts.Features.Chating.DTOs.MessageDTO
+    * @returns Transpiled from System.Threading.Tasks.Task
+    */
+    receiveNewMessagesAsync(accountId: string, chatId: number, messages: MessageDTO): Promise<void>;
+    /**
+    * @param accountId Transpiled from System.Guid
+    * @param chatId Transpiled from long
+    * @param oldMessageId Transpiled from long
+    * @param newMessageId Transpiled from long
+    * @returns Transpiled from System.Threading.Tasks.Task
+    */
+    receiveMessageSendSucceeded(accountId: string, chatId: number, oldMessageId: number, newMessageId: number): Promise<void>;
+    /**
+    * @param accountId Transpiled from System.Guid
+    * @param chatId Transpiled from long
+    * @param messageIds Transpiled from System.Collections.Generic.IEnumerable<long>
+    * @returns Transpiled from System.Threading.Tasks.Task
+    */
+    receiveDeletedMessagesAsync(accountId: string, chatId: number, messageIds: number[]): Promise<void>;
+    /**
+    * @param accountId Transpiled from System.Guid
+    * @param chatId Transpiled from long
+    * @param messages Transpiled from System.Collections.Generic.IEnumerable<tgm.Application.TgAccounts.Features.Chating.DTOs.MessageDTO>
+    * @returns Transpiled from System.Threading.Tasks.Task
+    */
+    connectionReceiveLoadedMessagesAsync(accountId: string, chatId: number, messages: MessageDTO[]): Promise<void>;
 }
 

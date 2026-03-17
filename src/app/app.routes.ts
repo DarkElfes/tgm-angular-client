@@ -17,7 +17,7 @@ export const routes: Routes = [
             },
             {
                 path: 'chating',
-                loadComponent: () => import('./pages/chating/chating.component').then(x => x.ChatingComponent)
+                loadComponent: () => import('./pages/chating/chating.component').then(x => x.ChatingComponent),                
             }
         ]
     },
